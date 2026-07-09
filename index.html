@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rifki & Sinta: Kisah Cinta Beda Dunia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="preloader">
+    <div class="preloader-content">
+      <h1>Rifki & Sinta</h1>
+      <p>Kisah Cinta Beda Dunia</p>
+      <div class="loading-bar"><div class="loading-fill"></div></div>
+      <p class="loading-text">Memuat cerita...</p>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
+    <div id="particles"></div>
+    <div id="rain-overlay" class="hidden"></div>
+    <div id="sakura-container"></div>
+
+    <div id="main-menu" class="screen active">
+      <div class="menu-bg"></div>
+      <div class="menu-content">
+        <h1 class="game-title">Rifki & Sinta</h1>
+        <h2 class="game-subtitle">Kisah Cinta Beda Dunia</h2>
+        <nav class="menu-nav">
+          <button class="menu-btn" onclick="game.newGame()">New Game</button>
+          <button class="menu-btn" onclick="game.continueGame()">Continue</button>
+          <button class="menu-btn" onclick="game.showLoad()">Load Game</button>
+          <button class="menu-btn" onclick="game.showGallery()">Gallery</button>
+          <button class="menu-btn" onclick="game.showAchievements()">Achievement</button>
+          <button class="menu-btn" onclick="game.showCodex()">Character Codex</button>
+          <button class="menu-btn" onclick="game.showSettings()">Settings</button>
+          <button class="menu-btn" onclick="game.showCredits()">Credits</button>
+        </nav>
+      </div>
+    </div>
+
+    <div id="game-screen" class="screen">
+      <div id="background-layer"></div>
+      <div id="character-layer">
+        <img id="char-left" class="char-img hidden" alt="">
+        <img id="char-center" class="char-img hidden" alt="">
+        <img id="char-right" class="char-img hidden" alt="">
+      </div>
+      <div id="dialogue-box">
+        <div id="speaker-name"></div>
+        <div id="dialogue-text"></div>
+        <div id="auto-save-indicator">Auto Saved</div>
+      </div>
+      <div id="choice-overlay" class="hidden"></div>
+      <div id="game-ui">
+        <button class="ui-btn" onclick="game.toggleMenu()">☰</button>
+        <button class="ui-btn" onclick="game.toggleAuto()">Auto</button>
+        <button class="ui-btn" onclick="game.toggleSkip()">Skip</button>
+      </div>
+      <div id="stat-bar" class="hidden">
+        <div class="stat"><span>Love</span><div class="stat-fill"><div id="stat-love"></div></div></div>
+        <div class="stat"><span>Courage</span><div class="stat-fill"><div id="stat-courage"></div></div></div>
+        <div class="stat"><span>Reputation</span><div class="stat-fill"><div id="stat-reputation"></div></div></div>
+        <div class="stat"><span>Trust</span><div class="stat-fill"><div id="stat-trust"></div></div></div>
+        <div class="stat"><span>Friendship</span><div class="stat-fill"><div id="stat-friendship"></div></div></div>
+      </div>
+    </div>
+
+    <div id="pause-menu" class="modal hidden">
+      <div class="modal-content">
+        <h2>Menu</h2>
+        <button onclick="game.saveGame(0)">Quick Save</button>
+        <button onclick="game.showSave()">Save</button>
+        <button onclick="game.showLoad()">Load</button>
+        <button onclick="game.showSettings()">Settings</button>
+        <button onclick="game.returnToMenu()">Main Menu</button>
+        <button onclick="game.toggleMenu()">Back</button>
+      </div>
+    </div>
+
+    <div id="save-screen" class="screen">
+      <h2>Save Game</h2>
+      <div class="slot-grid" id="save-slots"></div>
+      <button class="back-btn" onclick="game.backToGame()">Back</button>
+    </div>
+
+    <div id="load-screen" class="screen">
+      <h2>Load Game</h2>
+      <div class="slot-grid" id="load-slots"></div>
+      <button class="back-btn" onclick="game.showScreen('main-menu')">Back</button>
+    </div>
+
+    <div id="gallery-screen" class="screen">
+      <h2>Gallery</h2>
+      <div class="gallery-tabs">
+        <button onclick="game.showGalleryTab('cg')">CG</button>
+        <button onclick="game.showGalleryTab('char')">Characters</button>
+        <button onclick="game.showGalleryTab('ending')">Endings</button>
+      </div>
+      <div id="gallery-grid" class="gallery-grid"></div>
+      <button class="back-btn" onclick="game.showScreen('main-menu')">Back</button>
+    </div>
+
+    <div id="achievement-screen" class="screen">
+      <h2>Achievement</h2>
+      <div id="achievement-list" class="achievement-list"></div>
+      <button class="back-btn" onclick="game.showScreen('main-menu')">Back</button>
+    </div>
+
+    <div id="codex-screen" class="screen">
+      <h2>Character Codex</h2>
+      <div id="codex-grid" class="codex-grid"></div>
+      <button class="back-btn" onclick="game.showScreen('main-menu')">Back</button>
+    </div>
+
+    <div id="settings-screen" class="screen">
+      <h2>Settings</h2>
+      <div class="setting-row">
+        <label>BGM Volume</label>
+        <input type="range" id="bgm-vol" min="0" max="100" value="50">
+      </div>
+      <div class="setting-row">
+        <label>SFX Volume</label>
+        <input type="range" id="sfx-vol" min="0" max="100" value="70">
+      </div>
+      <div class="setting-row">
+        <label>Text Speed</label>
+        <input type="range" id="text-speed" min="10" max="100" value="40">
+      </div>
+      <div class="setting-row">
+        <label>Auto Mode Delay</label>
+        <input type="range" id="auto-delay" min="1000" max="5000" value="2000">
+      </div>
+      <div class="setting-row">
+        <label>Dark Mode</label>
+        <button id="dark-mode-toggle" onclick="game.toggleDarkMode()">Off</button>
+      </div>
+      <div class="setting-row">
+        <label>Fullscreen</label>
+        <button onclick="game.toggleFullscreen()">Toggle</button>
+      </div>
+      <button class="back-btn" onclick="game.showScreen('main-menu')">Back</button>
+    </div>
+
+    <div id="chat-screen" class="screen">
+      <div class="chat-header">
+        <img id="chat-avatar" src="" alt="">
+        <div>
+          <h3 id="chat-name">Sinta</h3>
+          <span id="chat-status">online</span>
+        </div>
+      </div>
+      <div id="chat-messages" class="chat-messages"></div>
+      <div id="chat-input-area" class="hidden">
+        <div class="chat-options" id="chat-options"></div>
+      </div>
+      <button class="back-btn" onclick="game.backToGame()">Back</button>
+    </div>
+
+    <div id="minigame-screen" class="screen">
+      <div id="minigame-container"></div>
+      <button class="back-btn" onclick="game.backToGame()">Back</button>
+    </div>
+
+    <div id="ending-screen" class="screen">
+      <div id="ending-content">
+        <h1 id="ending-title"></h1>
+        <p id="ending-desc"></p>
+        <img id="ending-img" src="" alt="">
+        <button onclick="game.showScreen('main-menu')">Main Menu</button>
+        <button onclick="game.showEndingCollection()">Ending Collection</button>
+      </div>
+    </div>
+
+    <div id="credits-screen" class="screen">
+      <div class="credits-roll">
+        <h1>Rifki & Sinta</h1>
+        <p>Kisah Cinta Beda Dunia</p>
+        <p>Created by AI Engine</p>
+        <p>Visual Novel Engine v1.0</p>
+        <p>Thank you for playing</p>
+      </div>
+      <button class="back-btn" onclick="game.showScreen('main-menu')">Back</button>
+    </div>
+
+    <div id="notification" class="hidden">
+      <div class="notif-content">
+        <span id="notif-icon">🏆</span>
+        <span id="notif-text"></span>
+      </div>
+    </div>
+  </div>
+
+  <audio id="bgm" loop></audio>
+  <audio id="sfx-click"></audio>
+  <audio id="sfx-notif"></audio>
+  <audio id="sfx-achievement"></audio>
+  <audio id="sfx-ending"></audio>
+
+  <script src="storyData.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
